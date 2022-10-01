@@ -1,5 +1,5 @@
 
-import { loginWithEmailPassword, signInWithGoogle } from "../../Firebase/providers"
+import { loginWithEmailPassword, logoutFirebase, signInWithGoogle } from "../../Firebase/providers"
 import { checkingCredentials, logout, login } from "./authSlice"
 import {registerWithEmailPassword} from '../../Firebase/providers'
 import { async } from "@firebase/util"
@@ -44,9 +44,16 @@ export const startLoginWithEmailPassword = ({email,password})=>{
         dispatch(checkingCredentials())
 
         const result= await loginWithEmailPassword({email, password})
-        console.log(result)
+    
 
         if(!result.ok) return dispatch( logout(result.errorMessage))
         dispatch(login(result))
+    }
+}
+
+export const  startLogOut =()=>{
+    return async( dispatch)=>{
+        await logoutFirebase() //desconecta cualquier lohgin, microsoft, google, etc
+        dispatch(logout()) // esto debería limpiar todo
     }
 }
